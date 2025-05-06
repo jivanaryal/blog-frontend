@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getAllBlogs } from "../api/blogApi";
 import { AuthContext } from "../context/AuthContext";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
