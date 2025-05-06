@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { getAllBlogs } from "../api/blogApi";
 import { AuthContext } from "../context/AuthContext";
-import { PlusCircleIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid"; // For search icon
+import { PlusCircleIcon } from "@heroicons/react/24/solid";
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
