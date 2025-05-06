@@ -1,3 +1,3 @@
-const API_BASE_URL = "http://localhost:3000"; // Assuming your backend is served under /api
+const API_BASE_URL = "https://blog-hqx2.onrender.com"; // Assuming your backend is served under /api
 
 export { API_BASE_URL };
