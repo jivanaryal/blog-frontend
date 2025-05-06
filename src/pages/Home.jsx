@@ -2,13 +2,14 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { getAllBlogs } from "../api/blogApi";
 import { AuthContext } from "../context/AuthContext";
-import { PlusCircleIcon } from "@heroicons/react/24/solid"; // For create blog button icon
+import { PlusCircleIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid"; // For search icon
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { token } = useContext(AuthContext); // To show/hide create blog button
+  const { token } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -16,7 +17,7 @@ const Home = () => {
         setLoading(true);
         setError(null);
         const data = await getAllBlogs();
-        setBlogs(data.blogs || data); // Adjust based on backend response structure
+        setBlogs(data.blogs || data);
       } catch (err) {
         setError(err.message || "Failed to fetch blogs.");
       }
@@ -26,30 +27,24 @@ const Home = () => {
     fetchBlogs();
   }, []);
 
-  if (loading) {
+  // Filter blogs based on title, content or author name
+  const filteredBlogs = blogs.filter((blog) => {
+    const query = searchQuery.toLowerCase();
     return (
-      <div className="flex justify-center items-center h-[calc(100vh-8rem)]">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-teal-500"></div>
-        <p className="ml-4 text-xl text-gray-700">Loading blogs...</p>
-      </div>
+      blog.title.toLowerCase().includes(query) ||
+      blog.content.toLowerCase().includes(query) ||
+      blog.author?.name?.toLowerCase().includes(query)
     );
-  }
+  });
 
-  if (error) {
-    return (
-      <div className="text-center mt-10 p-4 bg-red-100 text-red-700 rounded-md shadow">
-        <p className="text-xl font-semibold">Oops! Something went wrong.</p>
-        <p>{error}</p>
-      </div>
-    );
-  }
-
+  // UI return block stays mostly the same except for added search input
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
           Discover Blog Posts
         </h1>
+
         {token && (
           <Link
             to="/create-blog"
@@ -60,49 +55,45 @@ const Home = () => {
           </Link>
         )}
       </div>
-      {blogs.length === 0 ? (
-        <div className="text-center py-10">
-          <svg
-            className="mx-auto h-12 w-12 text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              vectorEffect="non-scaling-stroke"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
-            />
-          </svg>
-          <h3 className="mt-2 text-xl font-medium text-gray-900">
-            No blogs yet
-          </h3>
-          <p className="mt-1 text-sm text-gray-500">
-            Get started by creating a new blog post.
-          </p>
-          {!token && (
-            <p className="mt-2 text-sm text-gray-500">
-              Or{" "}
-              <Link to="/login" className="text-teal-600 hover:underline">
-                login
-              </Link>{" "}
-              to create one!
-            </p>
-          )}
+
+      {/* Search input */}
+      <div className="relative mb-8 max-w-md">
+        <input
+          type="text"
+          placeholder="Search blogs by title, content, or author..."
+          className="w-full border border-gray-300 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <MagnifyingGlassIcon className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+      </div>
+
+      {/* Loading state */}
+      {loading ? (
+        <div className="flex justify-center items-center h-[calc(100vh-8rem)]">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-teal-500"></div>
+          <p className="ml-4 text-xl text-gray-700">Loading blogs...</p>
+        </div>
+      ) : error ? (
+        <div className="text-center mt-10 p-4 bg-red-100 text-red-700 rounded-md shadow">
+          <p className="text-xl font-semibold">Oops! Something went wrong.</p>
+          <p>{error}</p>
+        </div>
+      ) : filteredBlogs.length === 0 ? (
+        <div className="text-center text-gray-600 mt-10">
+          <h3 className="text-xl font-medium">No matching blogs found.</h3>
+          <p>Try a different search keyword.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {blogs.map((blog) => (
+          {filteredBlogs.map((blog) => (
             <div
               key={blog._id}
               className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl transform hover:-translate-y-1 flex flex-col"
             >
               {blog.image ? (
                 <img
-                  src={blog.image} // Assuming image is a URL
+                  src={blog.image}
                   alt={blog.title}
                   className="w-full h-52 object-cover"
                 />
@@ -129,8 +120,6 @@ const Home = () => {
                   className="text-xl font-semibold text-gray-800 mb-2 truncate hover:text-teal-600 transition duration-150"
                   title={blog.title}
                 >
-                  {/* If you want a link to a single blog view page (not specified yet) */}
-                  {/* <Link to={`/blog/${blog._id}`}>{blog.title}</Link> */}
                   {blog.title}
                 </h2>
                 <div className="text-xs text-gray-500 mb-3 space-x-2">
@@ -152,8 +141,6 @@ const Home = () => {
                 <p className="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-3 flex-grow">
                   {blog.content}
                 </p>
-                {/* Optional: Read More link if content is long */}
-                {/* <Link to={`/blog/${blog._id}`} className="text-teal-600 hover:text-teal-700 font-medium text-sm self-start mt-auto">Read More &rarr;</Link> */}
               </div>
             </div>
           ))}

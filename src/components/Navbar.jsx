@@ -1,62 +1,104 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import { Bars3Icon, UserCircleIcon } from '@heroicons/react/24/outline'; // For hamburger and user icon
+import React, { useContext, useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import {
+  Bars3Icon,
+  UserCircleIcon,
+  HomeIcon,
+  PencilSquareIcon,
+  BookOpenIcon,
+  BellIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 
 const Navbar = ({ onToggleSidebar }) => {
-  const { token, user } = useContext(AuthContext); // No logout here, sidebar handles it
+  const { token, user } = useContext(AuthContext);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // Navbar should only render if there's a token, App.jsx handles this logic mostly
   if (!token) {
-    return null; // Or a minimal version for landing/login/register if needed, but current plan is no navbar there
+    return null;
   }
 
   return (
-    <nav className="bg-teal-600 text-white p-4 shadow-md fixed top-0 left-0 right-0 z-20">
+    <nav className="bg-gradient-to-r from-teal-600 to-teal-500 text-white py-3 px-4 shadow-lg fixed top-0 left-0 right-0 z-20">
       <div className="container mx-auto flex justify-between items-center">
-        {/* Hamburger Icon for mobile to toggle sidebar */} 
-        <button 
-          onClick={onToggleSidebar}
-          className="md:hidden text-white hover:text-teal-200 focus:outline-none"
-        >
-          <Bars3Icon className="h-7 w-7" />
-        </button>
+        {/* Left Section */}
+        <div className="flex items-center space-x-2">
+          {/* Hamburger Menu */}
+          <button
+            onClick={onToggleSidebar}
+            className="md:hidden text-white hover:text-teal-200 focus:outline-none transition duration-300 p-1 rounded-lg hover:bg-teal-700"
+            aria-label="Toggle sidebar"
+          >
+            <Bars3Icon className="h-6 w-6" />
+          </button>
 
-        <Link to="/" className="text-2xl font-bold hover:text-teal-100 transition duration-150">
-          BlogVerse
-        </Link>
-
-        {/* Desktop Navigation Links - kept minimal as sidebar is primary for more links */} 
-        <div className="hidden md:flex space-x-6 items-center">
-          <NavLinkItem to="/">Home</NavLinkItem>
-          <NavLinkItem to="/create-blog">Create Blog</NavLinkItem>
-          {/* <NavLinkItem to="/my-blogs">My Blogs</NavLinkItem> - In sidebar for less clutter */}
+          {/* Logo */}
+          <Link to="/" className="flex items-center">
+            <span className="text-2xl font-bold tracking-tight hover:text-teal-100 transition duration-300">
+              Blog<span className="text-yellow-300">Verse</span>
+            </span>
+          </Link>
         </div>
 
+        {/* Middle Section - Main Navigation */}
+        <div className="hidden  md:flex items-center space-x-1">
+          <NavItem to="/" icon={<HomeIcon className="h-5 w-5" />} text="Home" />
+          <NavItem
+            to="/create-blog"
+            icon={<PencilSquareIcon className="h-5 w-5" />}
+            text="Create"
+          />
+          <NavItem
+            to="/my-blogs"
+            icon={<BookOpenIcon className="h-5 w-5" />}
+            text="My Blogs"
+          />
+        </div>
+
+        {/* Right Section - Search & User */}
         <div className="flex items-center space-x-3">
+          {/* Mobile Search Toggle */}
+          <button
+            className="md:hidden text-white hover:text-teal-200"
+            onClick={() => setIsSearchOpen(!isSearchOpen)}
+          >
+            <MagnifyingGlassIcon className="h-6 w-6" />
+          </button>
+
+          {/* Notifications */}
+
+          {/* User Profile */}
           {user && (
-            <Link to="/profile" className="flex items-center hover:text-teal-200 transition duration-150">
-              <UserCircleIcon className="h-7 w-7 mr-1" />
-              <span className="hidden sm:inline text-sm">{user.name || 'Profile'}</span>
+            <Link
+              to="/profile"
+              className="flex items-center bg-teal-700/50 hover:bg-teal-700 px-3 py-1.5 rounded-full transition duration-300"
+            >
+              <UserCircleIcon className="h-6 w-6 mr-1" />
+              <span className="hidden sm:inline text-sm font-medium">
+                {user.name || "Profile"}
+              </span>
             </Link>
           )}
-          {/* Logout button is now in the Sidebar for a cleaner Navbar */} 
         </div>
       </div>
     </nav>
   );
 };
 
-// Helper component for NavLink styling
-const NavLinkItem = ({ to, children }) => (
-  <Link 
-    to={to} 
-    className="text-white hover:text-teal-200 px-3 py-2 rounded-md text-sm font-medium transition duration-150"
-    // activeClassName="bg-teal-700" // NavLink from react-router-dom v6 doesn't use activeClassName directly
-    // Use NavLink component from react-router-dom for active state if more complex styling needed
+// NavItem component with icon and text
+const NavItem = ({ to, icon, text }) => (
+  <NavLink
+    to={to}
+    className={({ isActive }) =>
+      `flex items-center px-3 py-2 rounded-lg text-sm font-medium transition duration-300 ${
+        isActive ? "bg-teal-700 text-white" : "text-white hover:bg-teal-700/50"
+      }`
+    }
   >
-    {children}
-  </Link>
+    <span className="mr-1.5">{icon}</span>
+    {text}
+  </NavLink>
 );
 
 export default Navbar;
