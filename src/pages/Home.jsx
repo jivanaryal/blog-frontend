@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getAllBlogs } from "../api/blogApi";
 import { AuthContext } from "../context/AuthContext";
 import { PlusCircleIcon } from "@heroicons/react/24/solid"; // For create blog button icon
