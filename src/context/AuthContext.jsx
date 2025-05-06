@@ -5,6 +5,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); // new
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -14,7 +15,9 @@ export const AuthProvider = ({ children }) => {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
     }
-  }, []); // This runs only once on component mount
+
+    setIsLoading(false); // done checking
+  }, []);
 
   useEffect(() => {
     if (token && user) {
@@ -24,7 +27,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
     }
-  }, [token, user]); // Sync the state with localStorage whenever token or user changes
+  }, [token, user]);
 
   const login = (newToken, userData) => {
     setToken(newToken);
@@ -37,7 +40,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout }}>
+    <AuthContext.Provider value={{ token, user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
