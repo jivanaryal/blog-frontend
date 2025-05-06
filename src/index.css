@@ -1,0 +1,42 @@
+@import "tailwindcss";
+/* Global body styles */
+body {
+  @apply bg-gray-50 text-gray-800 antialiased;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  color: "black";
+}
+
+/* Custom scrollbar (optional, for a more modern feel) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-teal-400 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-teal-500;
+}
+
+/* General focus styles for accessibility */
+*:focus-visible {
+  @apply outline-none ring-2 ring-teal-500 ring-offset-2;
+}
+
+/* Consistent heading styles (example) */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-semibold text-gray-900;
+}
