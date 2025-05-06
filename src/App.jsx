@@ -19,6 +19,7 @@ import LandingPage from "./pages/LandingPage"; // Import the new LandingPage
 import Profile from "./pages/Profile"; // Placeholder for Profile page
 import { useState } from "react";
 import SingleBlogPage from "./pages/SIngleBlogPage";
+import NotFound from "./components/NotFound";
 
 const MainLayout = ({ children }) => {
   const { token } = useContext(AuthContext);
@@ -121,7 +122,8 @@ function App() {
           />
 
           {/* Catch-all route */}
-          <Route path="*" element={<Navigate to="/landing" replace />} />
+          {/* <Route path="*" element={<Navigate to="/landing" replace />} /> */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </AuthProvider>
