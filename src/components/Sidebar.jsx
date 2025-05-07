@@ -40,7 +40,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         }`}
       >
         <div className="flex justify-between items-center p-4 border-b">
-          <span className="text-xl font-semibold text-teal-700">Menu</span>
+          <span className="text-xl font-semibold text-teal-700">Menus</span>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
