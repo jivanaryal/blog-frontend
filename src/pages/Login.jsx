@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -6,10 +6,16 @@ import { AuthContext } from "../context/AuthContext";
 import { loginUser } from "../api/authApi";
 
 const Login = () => {
-  const { login } = useContext(AuthContext);
+  const { login, token, isLoading } = useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && token) {
+      navigate("/");
+    }
+  }, [token, isLoading, navigate]);
 
   const formik = useFormik({
     initialValues: {

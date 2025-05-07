@@ -17,7 +17,7 @@ const CreateBlog = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const { token, user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleImageChange = (e) => {
@@ -31,13 +31,6 @@ const CreateBlog = () => {
   const handleSubmit = async (values) => {
     setError(null);
     setLoading(true);
-
-    if (!token || !user?._id) {
-      setError("You must be logged in to create a blog.");
-      setLoading(false);
-      navigate("/login");
-      return;
-    }
 
     const formData = new FormData();
     formData.append("title", values.title);
@@ -122,7 +115,7 @@ const CreateBlog = () => {
                   htmlFor="image"
                   className="block text-sm font-semibold text-gray-700 mb-1"
                 >
-                  Featured Image (Optional)
+                  Featured Image
                 </label>
                 <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                   <div className="space-y-1 text-center">

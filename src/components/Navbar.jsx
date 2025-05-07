@@ -7,17 +7,21 @@ import {
   HomeIcon,
   PencilSquareIcon,
   BookOpenIcon,
-  BellIcon,
   MagnifyingGlassIcon,
+  PowerIcon, // Added Power Icon for logout
 } from "@heroicons/react/24/outline";
 
 const Navbar = ({ onToggleSidebar }) => {
-  const { token, user } = useContext(AuthContext);
+  const { token, user, logout } = useContext(AuthContext); // Include logout from context
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   if (!token) {
     return null;
   }
+
+  const handleLogout = () => {
+    logout(); // Clear token and user from context and localStorage
+  };
 
   return (
     <nav className="bg-gradient-to-r from-teal-600 to-teal-500 text-white py-3 px-4 shadow-lg fixed top-0 left-0 right-0 z-20">
@@ -80,6 +84,15 @@ const Navbar = ({ onToggleSidebar }) => {
               </span>
             </Link>
           )}
+
+          {/* Logout Button with Icon */}
+          <button
+            onClick={handleLogout}
+            className="flex cursor-pointer  items-center text-white hover:text-teal-200 px-3 py-1.5 rounded-full transition duration-300"
+          >
+            <PowerIcon className="h-5 w-5 mr-1" />
+            Logout
+          </button>
         </div>
       </div>
     </nav>
