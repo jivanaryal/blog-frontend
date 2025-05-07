@@ -24,7 +24,7 @@ const Navbar = ({ onToggleSidebar }) => {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-teal-600 to-teal-500 text-white py-3 px-4 shadow-lg fixed top-0 left-0 right-0 z-20">
+    <nav className="bg-gradient-to-r from-teal-600 to-teal-500 text-white py-4 px-4 shadow-lg fixed top-0 left-0 right-0 z-20">
       <div className="container mx-auto flex justify-between items-center">
         {/* Left Section */}
         <div className="flex items-center space-x-2">
@@ -39,7 +39,7 @@ const Navbar = ({ onToggleSidebar }) => {
 
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-bold tracking-tight hover:text-teal-100 transition duration-300">
+            <span className="text-3xl font-bold tracking-tight hover:text-teal-100 transition duration-300">
               Blog<span className="text-yellow-300">Verse</span>
             </span>
           </Link>

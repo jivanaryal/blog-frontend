@@ -193,13 +193,10 @@ const SingleBlogPage = () => {
       )}
 
       {/* Blog Content */}
-      <div className="prose prose-lg max-w-none text-gray-800">
-        {blog?.content?.split("\n\n").map((paragraph, index) => (
-          <p key={index} className="mb-6 leading-relaxed">
-            {paragraph}
-          </p>
-        ))}
-      </div>
+      <div
+        className="prose prose-lg mb-10 max-w-none text-gray-800"
+        dangerouslySetInnerHTML={{ __html: blog?.content }}
+      ></div>
 
       {/* Tags Section */}
       {blog.tags?.length > 0 && (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAllBlogs } from "../api/blogApi";
 import { AuthContext } from "../context/AuthContext";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
@@ -11,6 +11,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { token } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -90,7 +91,8 @@ const Home = () => {
           {filteredBlogs.map((blog) => (
             <div
               key={blog._id}
-              className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl transform hover:-translate-y-1 flex flex-col"
+              onClick={() => navigate(`/singleAllBlogPage/${blog._id}`)}
+              className="bg-white cursor-pointer rounded-xl shadow-lg overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl transform hover:-translate-y-1 flex flex-col"
             >
               {blog.image ? (
                 <img

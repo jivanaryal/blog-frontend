@@ -20,6 +20,7 @@ import Profile from "./pages/Profile"; // Placeholder for Profile page
 import { useState } from "react";
 import SingleBlogPage from "./pages/SIngleBlogPage";
 import NotFound from "./components/NotFound";
+import SingleAllBlogPage from "./pages/SingleAllBlogPage";
 
 const MainLayout = ({ children }) => {
   const { token } = useContext(AuthContext);
@@ -116,6 +117,16 @@ function App() {
               <MainLayout>
                 <ProtectedRoute>
                   <SingleBlogPage />
+                </ProtectedRoute>
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/singleAllBlogPage/:id"
+            element={
+              <MainLayout>
+                <ProtectedRoute>
+                  <SingleAllBlogPage />
                 </ProtectedRoute>
               </MainLayout>
             }

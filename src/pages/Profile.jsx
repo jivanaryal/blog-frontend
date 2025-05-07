@@ -1,20 +1,41 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 // import { ReactComponent as AvatarIcon } from "../assets/avatar.svg"; // Optional SVG avatar
 import { PencilIcon } from "@heroicons/react/24/outline";
+import { Link, useNavigate } from "react-router-dom";
+import { getUserBlogs } from "../api/blogApi";
 
 const Profile = () => {
-  const { user } = useContext(AuthContext);
+  const { user, token } = useContext(AuthContext);
   const userName = user?.name || "Anonymous";
   const userEmail = user?.email || "N/A";
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  // Example: simulate user's blogs (replace with actual blog data later)
-  const userBlogs = [
-    { id: 1, title: "My First Blog" },
-    { id: 2, title: "Second Article" },
-    { id: 3, title: "React Tips" },
-  ];
-  const blogCount = userBlogs.length;
+  useEffect(() => {
+    const fetchUserBlogs = async () => {
+      if (!user || !user._id || !token) {
+        setError("Authentication required. Please log in.");
+        setLoading(false);
+        navigate("/login");
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await getUserBlogs(user._id);
+        setBlogs(data.blogs || data);
+      } catch (err) {
+        setError(err.message || "Failed to fetch your blogs.");
+      }
+      setLoading(false);
+    };
+
+    fetchUserBlogs();
+  }, [user, token, navigate]);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -54,7 +75,7 @@ const Profile = () => {
             <h3 className="text-lg font-semibold text-gray-700 mb-1">
               Total Blogs Uploaded
             </h3>
-            <p className="text-3xl text-teal-600 font-bold">{blogCount}</p>
+            <p className="text-3xl text-teal-600 font-bold">{blogs?.length}</p>
           </div>
 
           <div className="p-4 bg-gray-50 rounded-lg shadow">
@@ -71,8 +92,13 @@ const Profile = () => {
             Your Blogs
           </h3>
           <ul className="list-disc list-inside text-gray-600 space-y-1">
-            {userBlogs.map((blog) => (
-              <li key={blog.id}>{blog.title}</li>
+            {blogs.map((blog, i) => (
+              <Link key={i} to={`/singleBlog/${blog._id}`}>
+                {" "}
+                <li key={blog.id} className="underline font-lg capitalize">
+                  {blog.title}
+                </li>
+              </Link>
             ))}
           </ul>
         </div>
