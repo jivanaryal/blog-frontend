@@ -44,7 +44,7 @@ const EditBlog = () => {
     formData.append("author", user._id);
 
     try {
-      await axios.patch(`https://blog-1rng.onrender.com/${id}`, formData, {
+      await axios.patch(`https://blog-1rng.onrender.com/blog/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
