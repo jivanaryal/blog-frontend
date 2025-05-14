@@ -200,6 +200,7 @@ const MyBlogs = () => {
                 <div className="flex gap-3 mt-4 self-end">
                   <Link
                     to={`/edit-blog/${blog._id}`}
+                    state={{ blog }}
                     className="flex items-center text-white bg-yellow-500 hover:bg-yellow-600 text-sm px-3 py-1.5 rounded shadow-sm"
                   >
                     <PencilIcon className="w-4 h-4 mr-1" />
